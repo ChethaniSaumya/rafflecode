@@ -139,7 +139,7 @@ async function main() {
     passport.use(new GoogleStrategy({
         clientID: process.env.CLIENT_ID,
         clientSecret: process.env.CLIENT_SECRET,
-        callbackURL: "https://raffle-dapp.onrender.com/auth/google/callback",
+        callbackURL: "http://localhost:5000/auth/google/callback",
         // callbackURL: "http://localhost:5000/auth/google/callback",
         userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
     },
@@ -716,8 +716,10 @@ async function main() {
                 await Id.updateOne({ name: "ids" }, { userId: Number(temp.userId) + 3 });
                 const verificationLink = `${req.protocol}://${req.headers.host}/verify/${verificationtTokenn}?email=${req.body.email}`;
                 const customerEmail = req.body.email;
+                const userFromEmail = customerEmail.split('@')[0];
+
                 const emailSubject = `User Registered`;
-                const emailText = `Dear ${req.body.name},\nYou have successfully registered on Great Escape.\nPlease follow the link to verify your email: ${verificationLink}\n\nWith regards,\nGreat Escape team`;
+                const emailText = `Dear ${userFromEmail},\nYou have successfully registered on Great Escape.\nPlease follow the link to verify your email: ${verificationLink}\n\nWith regards,\nGreat Escape team`;
                 sendOrderConfirmationEmail(customerEmail, emailText, emailSubject);
                 res.render('Login', { message: "Your Account has been created successfully !" })
             }
